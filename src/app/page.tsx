@@ -9,7 +9,8 @@ import {
   UserButton,
 } from "@clerk/nextjs";
 
-function page() {
+async function page() {
+  
   return (
     <div>
       <h1>Welcome to the Socially App!</h1>
