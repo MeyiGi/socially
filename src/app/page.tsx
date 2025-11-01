@@ -12,9 +12,7 @@ import {
 async function page() {
   
   return (
-    <div>
-      <h1>Welcome to the Socially App!</h1>
-    </div>
+    <div></div>
   );
 }
 
