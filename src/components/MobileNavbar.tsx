@@ -36,7 +36,8 @@ function MobileNavbar() {
 
       <Sheet open={showMobileMenu} onOpenChange={setShowMobileMenu}>
         <SheetTrigger asChild>
-          <Button variant="ghost" size="icon">
+          {/* ADD suppressHydrationWarning HERE 👇 */}
+          <Button variant="ghost" size="icon" suppressHydrationWarning>
             <MenuIcon className="h-5 w-5" />
           </Button>
         </SheetTrigger>
