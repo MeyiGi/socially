@@ -1,14 +1,15 @@
 "use client";
 
 import { useUser } from "@clerk/nextjs";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Card, CardContent } from "./ui/card";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { Textarea } from "./ui/textarea";
-import { Button } from "./ui/button";
 import { ImageIcon, Loader2Icon, SendIcon } from "lucide-react";
+import { Button } from "./ui/button";
 import { createPost } from "@/actions/post.action";
 import toast from "react-hot-toast";
+import ImageUpload from "./ImageUpload";
 
 function CreatePost() {
   const { user } = useUser();
@@ -18,20 +19,24 @@ function CreatePost() {
   const [showImageUpload, setShowImageUpload] = useState(false);
 
   const handleSubmit = async () => {
-    if (!content.trim() && !imageUrl) return
-    
+    if (!content.trim() && !imageUrl) return;
+
     setIsPosting(true);
     try {
-        const result = await createPost(content, imageUrl);
-        if (result.success) {
-          setContent("");
-          setImageUrl("");
-          setShowImageUpload(false);
+      const result = await createPost(content, imageUrl);
+      if (result?.success) {
+        // reset the form
+        setContent("");
+        setImageUrl("");
+        setShowImageUpload(false);
 
-          toast.success("Post created successfully")
-        }
+        toast.success("Post created successfully");
+      }
     } catch (error) {
-
+      console.error("Failed to create post:", error);
+      toast.error("Failed to create post");
+    } finally {
+      setIsPosting(false);
     }
   };
 
@@ -52,7 +57,18 @@ function CreatePost() {
             />
           </div>
 
-          {/* TODO: HANDLE IMAGE UPLOADS */}
+          {(showImageUpload || imageUrl) && (
+            <div className="border rounded-lg p-4">
+              <ImageUpload
+                endpoint="imageUploader"
+                value={imageUrl}
+                onChange={(url) => {
+                  setImageUrl(url);
+                  if (!url) setShowImageUpload(false);
+                }}
+              />
+            </div>
+          )}
 
           <div className="flex items-center justify-between border-t pt-4">
             <div className="flex space-x-2">
@@ -91,5 +107,4 @@ function CreatePost() {
     </Card>
   );
 }
-
 export default CreatePost;
